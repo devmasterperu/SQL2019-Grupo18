@@ -165,7 +165,7 @@ go
 
 CREATE TABLE Zona(
     codzona      int            IDENTITY(1,1),
-    nombre       varchar(10)    NULL,
+    nombre       varchar(100)   NOT NULL,
     estado       bit            NOT NULL,
     codubigeo    int            NOT NULL,
     CONSTRAINT PK7 PRIMARY KEY NONCLUSTERED (codzona)
