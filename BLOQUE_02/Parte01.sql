@@ -86,3 +86,112 @@ case when precioref>=0 and precioref<70 then '[0,70>'
 else 'No es posible determinar'
 end as RANGO_SOL
 from PlanInternet
+
+--Uso AND-OR
+
+select nom_dpto,nom_prov,nom_dto
+from Ubigeo
+where nom_dpto='LIMA' and nom_prov='HUAURA'
+
+select nom_dpto,nom_prov,nom_dto
+from Ubigeo
+where nom_dpto='LIMA' or nom_prov='HUAURA'
+
+--02.08
+
+--A
+
+select codzona as CODZONA,nombre as ZONA,codubigeo as [CODIGO UBIGEO],estado as ESTADO,
+case when estado=1 then 'Zona activa'
+else 'Zon inactiva'
+end as [MENSAJE ESTADO]
+from Zona
+--where estado=1 and codubigeo=1 or codzona>=4
+--where estado=1 and codubigeo=1 and codzona>=4
+where estado=1 and (codubigeo=1 and codzona>=4)
+order by codzona desc
+
+--B
+
+select codzona as CODZONA,nombre as ZONA,codubigeo as [CODIGO UBIGEO],estado as ESTADO,
+case when estado=1 then 'Zona activa'
+else 'Zon inactiva'
+end as [MENSAJE ESTADO]
+from Zona
+where estado=1 and codubigeo=1
+order by nombre desc
+
+--C
+
+select codzona as CODZONA,nombre as ZONA,codubigeo as [CODIGO UBIGEO],estado as ESTADO,
+case when estado=1 then 'Zona activa'
+else 'Zon inactiva'
+end as [MENSAJE ESTADO]
+from Zona
+where estado=0 or codubigeo=1
+order by estado asc
+
+--D
+select codzona as CODZONA,nombre as ZONA,codubigeo as [CODIGO UBIGEO],estado as ESTADO,
+case when estado=1 then 'Zona activa'
+else 'Zon inactiva'
+end as [MENSAJE ESTADO]
+from Zona
+where estado=1 or codubigeo=1
+order by codubigeo desc,nombre asc
+
+--E
+
+select codzona as CODZONA,nombre as ZONA,codubigeo as [CODIGO UBIGEO],estado as ESTADO,
+case when estado=1 then 'Zona activa'
+else 'Zon inactiva'
+end as [MENSAJE ESTADO]
+from Zona
+--where NOT(estado=1 and codubigeo=1) --Complemento
+where NOT(estado=1) or NOT(codubigeo=1) --Complemento
+order by codzona asc
+
+--02.10
+
+--A
+select * from TipoDocumento
+
+select 
+case when codtipo=3 then 'RUC' else 'OTRO TIPO' end as TIPO_DOC,
+tipo_cliente as TIPO_CLIENTE,
+numdoc as NUM_DOC,
+razon_social as RAZON_SOCIAL,
+codzona as CODZONA,
+fec_inicio as FEC_INICIO
+from Cliente
+--where tipo_cliente='E' and (codzona=1 or codzona=3 or codzona=5 or codzona=7)
+where tipo_cliente='E' and codzona in (1,3,5,7)
+order by razon_social desc
+
+--B
+
+select 
+case when codtipo=3 then 'RUC' else 'OTRO TIPO' end as TIPO_DOC,
+tipo_cliente as TIPO_CLIENTE,
+numdoc as NUM_DOC,
+razon_social as RAZON_SOCIAL,
+codzona as CODZONA,
+fec_inicio as FEC_INICIO
+from Cliente
+/*NO PRACTICO: where tipo_cliente='E' and fec_inicio in ('1998-01-01','1998-01-02','1998-01-03',...)*/
+where tipo_cliente='E' and fec_inicio between '1998-01-01' and '1998-12-31'
+order by fec_inicio desc --/*más reciente al más antiguo*/
+
+select 
+case when codtipo=3 then 'RUC' else 'OTRO TIPO' end as TIPO_DOC,
+tipo_cliente as TIPO_CLIENTE,
+numdoc as NUM_DOC,
+razon_social as RAZON_SOCIAL,
+codzona as CODZONA,
+fec_inicio as FEC_INICIO,
+month(fec_inicio) as MES
+from Cliente
+/*NO PRACTICO: where tipo_cliente='E' and fec_inicio in ('1998-01-01','1998-01-02','1998-01-03',...)*/
+--where tipo_cliente='E' and fec_inicio between '1998-01-01' and '1998-12-31'
+where tipo_cliente='E' and month(fec_inicio) between 1 and 5
+order by fec_inicio desc --/*más reciente al más antiguo*/
