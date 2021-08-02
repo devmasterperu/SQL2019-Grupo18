@@ -74,3 +74,22 @@ values
 (210.00,'Solicitado por comité agosto 2021','STAR III','2021-07-27 12:20:00.000')
 
 select * from dbo.PlanInternet
+
+--04.02
+
+--(a)
+--(5) Inserción desde una consulta
+--Tabla_Destino: Zona - Columnas: nombre,estado
+--Tabla_Origen : Zona_Carga
+insert into Zona (nombre,estado,codubigeo)
+output inserted.codzona,inserted.nombre
+select nombre,1 as estado,u.codubigeo
+/*NO PRACTICO:case when departamento='LIMA' and provincia='HUAURA' and distrito='CHECRAS' then 1*/
+from Zona_Carga zc
+inner join Ubigeo u 
+on upper(trim(zc.departamento))=upper(trim(u.nom_dpto)) and 
+   upper(trim(zc.provincia))=upper(trim(u.nom_prov))    and
+   upper(trim(zc.distrito))=upper(trim(u.nom_dto)) 
+where estado='ACTIVO'
+
+--(b)
