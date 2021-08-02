@@ -87,3 +87,22 @@ from PlanInternet p
 right join Contrato co  on co.codplan=p.codplan
 --where p.codplan is null --Registros que están en contrato pero no en Plan de Internet
 order by p.nombre
+
+--03.12
+
+select isnull(c.codcliente,0) as [CLIENTE CODCLIENTE],
+case when c.tipo_cliente='E' then c.razon_social
+	 when c.tipo_cliente='P' then concat(trim(c.nombres),' ',trim(c.ape_paterno),' ',trim(c.ape_materno))
+	 else 'SIN DATO'
+end as CLIENTE_NOMBRE,
+lower(isnull(c.email,'SIN DATO')) as CLIENTE_CORREO ,
+isnull(co.codcliente,0) as CONTRATO_CODCLIENTE,
+isnull(p.nombre,'SIN DATO') as CONTRATO_PLAN,
+isnull(co.fec_contrato,'9999-12-31') as CONTRATO_FECHA
+/*Los clientes independientemente de contar o no con contratos relacionados y 
+  los contratos, independientemente de contar o no con clientes relacionados*/
+from Cliente c 
+full join Contrato co on c.codcliente=co.codcliente
+/*Combinaciones de contratos y clientes independientemente de contar con plan de internet relacionado*/
+left join PlanInternet p on co.codplan=p.codplan
+order by co.codcliente asc
